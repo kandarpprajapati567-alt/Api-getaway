@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-AI API Gateway</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #e9ecef; }
+        .dashboard-container { background: white; padding: 25px; border-radius: 10px; max-width: 500px; margin: 40px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; color: #555; margin-bottom: 5px; }
+        input { width: 95%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #218838; }
+        #status-message { text-align: center; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Multi-AI API Gateway Setup</h2>
+        
+        <div class="form-group">
+            <label for="appUrl">Android App URL (Webhook):</label>
+            <input type="text" id="appUrl" placeholder="https://your-app-url.com/webhook">
+        </div>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <p style="color: #666; font-size: 14px;">Add your API Keys below (You can add more later):</p>
+
+        <div class="form-group">
+            <label for="geminiKey">Google Gemini API Key:</label>
+            <input type="password" id="geminiKey" placeholder="Gemini Key">
+        </div>
+
+        <div class="form-group">
+            <label for="openaiKey">OpenAI (ChatGPT) API Key:</label>
+            <input type="password" id="openaiKey" placeholder="OpenAI Key">
+        </div>
+
+        <div class="form-group">
+            <label for="claudeKey">Claude (Anthropic) API Key:</label>
+            <input type="password" id="claudeKey" placeholder="Claude Key">
+        </div>
+        
+        <button onclick="saveConfiguration()">Save All Configurations</button>
+        
+        <p id="status-message"></p>
+    </div>
+
+    <script>
+        function saveConfiguration() {
+            const url = document.getElementById('appUrl').value;
+            
+            // सभी Keys का एक Object बना रहे हैं
+            const apiKeys = {
+                gemini: document.getElementById('geminiKey').value,
+                openai: document.getElementById('openaiKey').value,
+                claude: document.getElementById('claudeKey').value
+            };
+            
+            // Backend को डेटा भेजना
+            fetch('/update-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, keys: apiKeys })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusEl = document.getElementById('status-message');
+                statusEl.innerText = data.message;
+                statusEl.style.color = "green";
+            })
+            .catch(error => {
+                const statusEl = document.getElementById('status-message');
+                statusEl.innerText = "Error saving configuration.";
+                statusEl.style.color = "red";
+            });
+        }
+    </script>
+</body>
+</html>
