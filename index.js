@@ -7,17 +7,20 @@ app.use(cors());
 app.use(express.json());
 
 // =======================================================
-// YE AAPKA SINGLE URL HOGA -> /get-my-app-data
+// NEW: Ye aapke main page (Root URL) ke liye hai
+// =======================================================
+app.get('/', (req, res) => {
+    res.send("Welcome to My Secure API Proxy Server! The server is running perfectly.");
+});
+
+// =======================================================
+// YE AAPKA SINGLE URL HOGA JO ANDROID APP USE KAREGA
 // =======================================================
 app.get('/get-my-app-data', async (req, res) => {
     try {
-        // Aapki keys jo aap Hosting website pe dalenge, wo yahan automatic aayengi
         const weatherApi = process.env.API_KEY_1; 
         const sportsApi = process.env.API_KEY_2;
-        const newsApi = process.env.API_KEY_3;
-        // Aise hi aap 30 keys tak read kar sakte hain
 
-        // Yahan par hum abhi sirf ek test response bhej rahe hain aapke Android app ko
         res.json({
             status: "Success",
             message: "Single URL is working perfectly!",
