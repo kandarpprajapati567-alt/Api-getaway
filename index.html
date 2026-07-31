@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hey Nova · API Gateway</title>
+<style>
+:root{--bg:#070b14;--card:#0f1623;--border:#1e293b;--accent:#6366f1;--accent2:#a855f7;--green:#22c55e;--text:#e2e8f0;--muted:#94a3b8;--danger:#f87171;--amber:#fbbf24}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#070b14,#0f172a 45%,#1e1b4b);color:var(--text);min-height:100vh;line-height:1.5}
+header{background:rgba(0,0,0,.5);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);position:sticky;top:0;z-index:50;padding:12px 16px}
+.hi{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;box-shadow:0 4px 20px rgba(99,102,241,.35)}
+h1{font-size:1.1rem;font-weight:700}
+.sub{font-size:.72rem;color:var(--muted)}
+main{max-width:960px;margin:0 auto;padding:18px 14px 60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h2{font-size:.95rem;margin-bottom:10px}
+label{display:block;font-size:.74rem;color:var(--muted);margin-bottom:4px}
+input{width:100%;background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:.86rem;outline:none}
+input:focus{border-color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:10px;border:none;font-weight:600;font-size:.82rem;cursor:pointer;transition:.15s;text-decoration:none}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-p:hover{opacity:.9}
+.btn-g{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.btn-x{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border)}
+.btn-d{color:var(--danger);background:transparent;border:none;font-size:.76rem;cursor:pointer}
+.btn-link{background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.3);font-size:.72rem;padding:5px 10px}
+.api{background:#0a0f1a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}
+.api-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+.master{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(99,102,241,.06));border:1px solid rgba(34,197,94,.28);border-radius:16px;padding:16px;display:none}
+.master.show{display:block}
+.master h3{color:var(--green);font-size:1rem;margin-bottom:6px}
+.master-url{font-family:ui-monospace,monospace;font-size:.8rem;background:#0a0f1a;padding:10px 12px;border-radius:10px;border:1px solid var(--border);word-break:break-all;color:#6ee7b7;margin:10px 0}
+pre{background:#0a0f1a;border-radius:10px;padding:12px;font-size:.7rem;overflow-x:auto;color:#86efac;margin-top:10px;border:1px solid var(--border);white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.empty{text-align:center;padding:28px 14px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);font-size:.86rem}
+.hint{font-size:.72rem;color:var(--muted);margin-top:3px}
+.sec{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:12px;margin-bottom:14px;font-size:.8rem}
+.sec strong{color:var(--amber)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;max-height:320px;overflow-y:auto;padding-right:4px}
+.tool{background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:.78rem}
+.tool b{display:block;margin-bottom:4px}
+.tool a{color:#a5b4fc;text-decoration:none;font-size:.72rem}
+.tool a:hover{text-decoration:underline}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:6px 12px;border-radius:8px;font-size:.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted)}
+.tab.on{background:rgba(99,102,241,.2);color:#c7d2fe;border-color:rgba(99,102,241,.4)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <div class="logo">HN</div>
+    <div>
+      <h1>Hey Nova · API Gateway</h1>
+      <div class="sub">1 URL · 30 AI tools · Keys secure · Dynamic</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="sec">
+    <strong>🔒 Security:</strong> Keys browser me local rehti hain (localStorage). Server logs me keys mask hoti hain. Rate limit 60/min. Private IPs block. Optional: Vercel me <code>GATEWAY_SECRET</code> set karo → har request me <code>x-gateway-key</code> header bhejna padega.
+  </div>
+
+  <div class="card">
+    <label>Project Name</label>
+    <input id="projectName" value="Hey Nova" placeholder="Hey Nova"/>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('apis',this)">My APIs</button>
+      <button class="tab" onclick="showTab('catalog',this)">30 AI Tools + Key Links</button>
+    </div>
+
+    <div id="tab-apis">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <h2>APIs <span id="cnt" style="color:var(--muted);font-weight:400">(0)</span></h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-g" onclick="loadTop()">+ Top 10 Free AI</button>
+          <button class="btn btn-p" onclick="addApi()">+ Add API</button>
+        </div>
+      </div>
+      <p class="hint" style="margin-bottom:10px">URL optional. Sirf Name + API Key kaafi hai known services ke liye. Key ke liye neeche catalog me link se jaao → copy → yahan paste.</p>
+      <div id="list"></div>
+      <div class="actions">
+        <button class="btn btn-p" onclick="generate()">Generate Single Gateway URL</button>
+        <button class="btn btn-x" onclick="clearAll()">Clear</button>
+      </div>
+    </div>
+
+    <div id="tab-catalog" style="display:none">
+      <h2>30 Best AI / API Tools — Get API Key</h2>
+      <p class="hint" style="margin-bottom:10px">Link pe click → account banao / key copy karo → My APIs me paste karo</p>
+      <div class="tools-grid" id="catalog"></div>
+    </div>
+  </div>
+
+  <div id="result" class="master">
+    <h3>✅ Single Working Gateway URL</h3>
+    <p style="font-size:.82rem;color:var(--muted)">Yeh URL saari APIs ko represent karta hai. Hey Nova app me sirf yahi use karo.</p>
+    <div class="master-url" id="masterUrl"></div>
+    <button class="btn btn-g" onclick="copyMaster()">Copy Gateway URL</button>
+    <p style="font-size:.82rem;margin-top:14px;color:var(--muted)"><strong>Hey Nova app example:</strong></p>
+    <pre id="code"></pre>
+  </div>
+</main>
+
+<script>
+const CATALOG = [
+  { id:'groq', name:'Groq', link:'https://console.groq.com/keys', free:true },
+  { id:'openrouter', name:'OpenRouter', link:'https://openrouter.ai/keys', free:true },
+  { id:'gemini', name:'Google Gemini', link:'https://aistudio.google.com/apikey', free:true },
+  { id:'openai', name:'OpenAI', link:'https://platform.openai.com/api-keys', free:false },
+  { id:'anthropic', name:'Anthropic Claude', link:'https://console.anthropic.com/settings/keys', free:false },
+  { id:'huggingface', name:'Hugging Face', link:'https://huggingface.co/settings/tokens', free:true },
+  { id:'together', name:'Together AI', link:'https://api.together.xyz/settings/api-keys', free:true },
+  { id:'cohere', name:'Cohere', link:'https://dashboard.cohere.com/api-keys', free:true },
+  { id:'mistral', name:'Mistral AI', link:'https://console.mistral.ai/api-keys', free:true },
+  { id:'deepseek', name:'DeepSeek', link:'https://platform.deepseek.com/api_keys', free:true },
+  { id:'fireworks', name:'Fireworks AI', link:'https://fireworks.ai/account/api-keys', free:true },
+  { id:'perplexity', name:'Perplexity', link:'https://www.perplexity.ai/settings/api', free:false },
+  { id:'xai', name:'xAI Grok', link:'https://console.x.ai', free:false },
+  { id:'cerebras', name:'Cerebras', link:'https://cloud.cerebras.ai', free:true },
+  { id:'sambanova', name:'SambaNova', link:'https://cloud.sambanova.ai', free:true },
+  { id:'replicate', name:'Replicate', link:'https://replicate.com/account/api-tokens', free:true },
+  { id:'stability', name:'Stability AI', link:'https://platform.stability.ai/account/keys', free:false },
+  { id:'elevenlabs', name:'ElevenLabs TTS', link:'https://elevenlabs.io/app/settings/api-keys', free:true },
+  { id:'assemblyai', name:'AssemblyAI STT', link:'https://www.assemblyai.com/app/account', free:true },
+  { id:'deepgram', name:'Deepgram STT', link:'https://console.deepgram.com', free:true },
+  { id:'pinecone', name:'Pinecone Vector', link:'https://app.pinecone.io', free:true },
+  { id:'supabase', name:'Supabase', link:'https://supabase.com/dashboard/account/tokens', free:true },
+  { id:'cloudflare', name:'Cloudflare AI', link:'https://dash.cloudflare.com/profile/api-tokens', free:true },
+  { id:'serper', name:'Serper Search', link:'https://serper.dev/api-key', free:true },
+  { id:'tavily', name:'Tavily Search', link:'https://tavily.com', free:true },
+  { id:'weather', name:'Open-Meteo Weather', link:null, free:true },
+  { id:'newsapi', name:'NewsAPI', link:'https://newsapi.org/account', free:true },
+  { id:'removebg', name:'Remove.bg', link:'https://www.remove.bg/dashboard#api-key', free:true },
+  { id:'jsonplaceholder', name:'JSONPlaceholder (test)', link:null, free:true },
+  { id:'catfact', name:'Cat Facts (test)', link:null, free:true }
+];
+
+const TOP10 = ['groq','openrouter','gemini','huggingface','together','cohere','mistral','deepseek','cerebras','fireworks'];
+let apis = [];
+
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function load(){
+  try{ const r=localStorage.getItem('hn-apis-v2'); if(r) apis=JSON.parse(r); }catch{}
+  render();
+  renderCatalog();
+}
+function save(){ localStorage.setItem('hn-apis-v2', JSON.stringify(apis)); render(); }
+
+function showTab(id, btn){
+  document.getElementById('tab-apis').style.display = id==='apis'?'block':'none';
+  document.getElementById('tab-catalog').style.display = id==='catalog'?'block':'none';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function renderCatalog(){
+  document.getElementById('catalog').innerHTML = CATALOG.map(t=>`
+    <div class="tool">
+      <b>${t.name} ${t.free?'<span style="color:var(--green);font-size:.65rem">FREE</span>':''}</b>
+      <span style="color:var(--muted);font-size:.7rem">service: ${t.id}</span><br>
+      ${t.link?`<a href="${t.link}" target="_blank" rel="noopener">🔑 Get API Key →</a>`:'<span style="color:var(--muted);font-size:.7rem">No key needed</span>'}
+      <button class="btn btn-link" style="margin-top:6px" onclick="addFromCatalog('${t.id}','${esc(t.name)}')">+ Add</button>
+    </div>
+  `).join('');
+}
+
+function addFromCatalog(id, name){
+  if(apis.some(a=>a.service===id)){ alert(name+' already added'); return; }
+  apis.push({ id:uid(), name, service:id, url:'', key:'', desc:'' });
+  save();
+  showTab('apis', document.querySelectorAll('.tab')[0]);
+}
+
+function addApi(){
+  apis.push({ id:uid(), name:'', service:'', url:'', key:'', desc:'' });
+  save();
+}
+function removeApi(id){ apis=apis.filter(a=>a.id!==id); save(); }
+function upd(id,f,v){ const a=apis.find(x=>x.id===id); if(a){ a[f]=v; save(); } }
+
+function loadTop(){
+  TOP10.forEach(id=>{
+    const t=CATALOG.find(c=>c.id===id);
+    if(t && !apis.some(a=>a.service===id)){
+      apis.push({ id:uid(), name:t.name, service:id, url:'', key:'', desc:'' });
+    }
+  });
+  document.getElementById('projectName').value='Hey Nova';
+  save();
+}
+function clearAll(){ if(confirm('Clear all APIs?')){ apis=[]; save(); document.getElementById('result').classList.remove('show'); } }
+
+function render(){
+  document.getElementById('cnt').textContent=`(${apis.length})`;
+  const list=document.getElementById('list');
+  if(!apis.length){
+    list.innerHTML=`<div class="empty">No APIs yet<br><br>
+      <button class="btn btn-p" onclick="loadTop()">Load Top 10 Free AI</button>
+      <button class="btn btn-x" onclick="addApi()">+ Add Manually</button></div>`;
+    return;
+  }
+  list.innerHTML=apis.map((a,i)=>{
+    const cat=CATALOG.find(c=>c.id===a.service);
+    return `
+    <div class="api">
+      <div class="api-top">
+        <span style="font-size:.72rem;color:var(--muted)">#${i+1}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${cat&&cat.link?`<a class="btn btn-link" href="${cat.link}" target="_blank" rel="noopener">Get Key</a>`:''}
+          <button class="btn-d" onclick="removeApi('${a.id}')">Remove</button>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom:8px">
+        <div>
+          <label>Name *</label>
+          <input value="${esc(a.name)}" placeholder="e.g. Groq" onchange="upd('${a.id}','name',this.value)"/>
+        </div>
+        <div>
+          <label>Service ID</label>
+          <input value="${esc(a.service)}" placeholder="groq / openrouter / gemini..." onchange="upd('${a.id}','service',this.value)"/>
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <label>API Key 🔑</label>
+        <input type="password" value="${esc(a.key)}" placeholder="Paste key here (sk-... / gsk_...)" onchange="upd('${a.id}','key',this.value)" onfocus="this.type='text'" onblur="this.type='password'"/>
+      </div>
+      <div>
+        <label>Target URL <span style="color:var(--muted)">(optional)</span></label>
+        <input value="${esc(a.url)}" placeholder="Leave empty for known services" onchange="upd('${a.id}','url',this.value)"/>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function generate(){
+  if(!apis.length) return alert('Add at least one API');
+  if(apis.some(a=>!a.name.trim())) return alert('Every API needs a Name');
+
+  const base=location.origin+'/api/gateway';
+  document.getElementById('masterUrl').textContent=base;
+
+  const servicesList=apis.map(a=>`//  ${a.name} → service: "${a.service||'custom'}"`).join('\n');
+
+  document.getElementById('code').textContent=`// Hey Nova — SIRF yeh ek URL
+const GATEWAY = "${base}";
+
+// Example: Groq chat
+async function chat(service, messages, apiKey) {
+  const res = await fetch(GATEWAY, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+      // Optional security: "x-gateway-key": "YOUR_GATEWAY_SECRET"
+    },
+    body: JSON.stringify({
+      service,          // e.g. "groq"
+      apiKey,           // your key for that service
+      payload: {
+        model: "llama-3.1-8b-instant",
+        messages
+      }
+    })
+  });
+  return res.json();
+}
+
+// Your services:
+${servicesList}
+
+// Security tip: Vercel Environment Variables me keys (GROQ_KEY etc.)
+// aur GATEWAY_SECRET set karo — phir app se key mat bhejo.`;
+
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+function copyMaster(){
+  navigator.clipboard.writeText(document.getElementById('masterUrl').textContent);
+  alert('Gateway URL copied!');
+}
+
+load();
+</script>
+</body>
+</html>
